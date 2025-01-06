@@ -11,19 +11,24 @@ function preload(){
 	sound = loadSound('assets/stomper_reggae_bit.mp3');
 }
 
-function setup(){
-	 createCanvas(windowWidth, windowHeight);
-	 background(0);
-	 controls = new ControlsAndInput();
+function setup() {
+	controls = new ControlsAndInput();
+	background(45, 45, 42);
+	// MY CUSTOM CODE START HERE //
+	// Create a full-window canvas & assign the canvas to the div with id "musicVisCanvas"
+	let canvas = createCanvas(windowWidth, windowHeight - 80);
+	canvas.parent("musicVisCanvas");
+	controls.initialisePlayerBarUI(); //LOADING NEW PLAYER BAR UI HERE Since it is HTML
+	// END  MY CUSTOM CODE START HERE //
 
-	 //instantiate the fft object
-	 fourier = new p5.FFT();
+	//instantiate the fft object
+	fourier = new p5.FFT();
+	//create a new visualisation container and add visualisations
+	vis = new Visualisations();
+	vis.add(new Spectrum());
+	vis.add(new WavePattern());
+	vis.add(new Needles());
 
-	 //create a new visualisation container and add visualisations
-	 vis = new Visualisations();
-	 vis.add(new Spectrum());
-	 vis.add(new WavePattern());
-	 vis.add(new Needles());
 
 }
 
@@ -31,17 +36,19 @@ function draw(){
 	background(0);
 	//draw the selected visualisation
 	vis.selectedVisual.draw();
-	//draw the controls on top.
-	controls.draw();
+
+
 }
 
-function mouseClicked(){
-	controls.mousePressed();
-}
+// Commenting this out for now.
+// function mouseClicked(){
+// 	controls.mousePressed();
+// }
 
 function keyPressed(){
 	controls.keyPressed(keyCode);
 }
+
 
 //when the window has been resized. Resize canvas to fit 
 //if the visualisation needs to be resized call its onResize method
