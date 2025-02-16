@@ -7,6 +7,12 @@ function ControlsAndInput(){
 	//playback button displayed in the top left of the screen
 	this.playbackButton = new PlaybackButton();
 
+
+	// MY CODE HERE
+	this.elapsedTimeMin = '0';
+	this.elapsedTimeSec = '00';
+	// END MY CODE HERE
+
 	//make the window fullscreen or revert to windowed
 
 	//responds to keyboard presses
@@ -49,8 +55,13 @@ function ControlsAndInput(){
 		}
 	};
 
+	// MY CUSTOM CODE STARTS HERE //
+	this.updateElapsedTime = function (elapsedTime) {
+		console.log(`${elapsedTime}`);
+		document.querySelector('.elapsed-time').innerHTML = `${elapsedTime}`
+	}
+
 	this.initialisePlayerBarUI = function () {
-		// MY CUSTOM CODE START HERE //
 		createDiv(`
 			<nav class="player-bar flex-start-center">
 				
@@ -74,7 +85,7 @@ function ControlsAndInput(){
 					</button>
 						
 					<div class="elapsed-time">
-						2:34 / 4:50
+						 ${this.elapsedTimeMin}:${this.elapsedTimeSec} / ${durationMinutes}:${durationSeconds}
 					</div>
 				</div>
 				
@@ -84,13 +95,13 @@ function ControlsAndInput(){
 				
 				<div class="player-bar-features flex-evenly-center">
 				
-					<button class="visualisation-button">
+					<button class="visualization-button relative">
 						<span class="material-symbols-outlined white">
 							key_visualizer
 						</span>
 					</button>
 					
-					<button class="playlist-button">
+					<button class="playlist-button relative">
 						<span class="material-symbols-outlined white">
 							playlist_play
 						</span>
@@ -107,9 +118,15 @@ function ControlsAndInput(){
 		`);
 
 
+		let playListPopup = new PopUpConstructor(['hi','hi','hi']);
+		let visualizationPopup = new PopUpConstructor(['hi','hi','hi']);
+
+		// SET CLICK EVENTS HERE
+		let visualizationButton = document.querySelector(".visualization-button");
+		let playListButton = document.querySelector(".playlist-button")
+
 		let playButton = document.querySelector(".play-button");
 		let playIcon = document.querySelector(".play-button .material-symbols-outlined");
-
 		playButton.addEventListener("click", () => {
 			if (sound.isPlaying()) {
 				sound.pause();
@@ -119,6 +136,31 @@ function ControlsAndInput(){
 				playIcon.innerHTML = "pause";
 			}
 		})
+
+		playListButton.addEventListener("click", (event) => {
+			// Get relevant playlist information
+			//load popup
+			playListPopup.click((callback)=>{
+				if(callback){
+					playListButton.innerHTML = playListPopup.initialisePopUp('play-list-popup') + playListButton.innerHTML;
+				} else {
+					document.querySelector(`.play-list-popup`).remove();
+				}
+			});
+
+		})
+
+		visualizationButton.addEventListener('click', (event)=>{
+			// Get relevant visualization info
+			//load popup
+			visualizationPopup.click((callback)=>{
+				if(callback){
+					visualizationButton.innerHTML = visualizationPopup.initialisePopUp(`visualization-list-popup`) + visualizationButton.innerHTML;
+				} else {
+					document.querySelector(`.visualization-list-popup`).remove();
+				}
+			});
+		});
 
 		let fullscreenButton = document.querySelector(".fullscreen-button");
 		let playBar = document.querySelector(".player-bar");
@@ -142,9 +184,8 @@ function ControlsAndInput(){
 				}
 			}
 		} // END: Got help on stackoverflow to make this work //
-
-		// END  MY CUSTOM CODE START HERE //
 	}
+	// END OF MY CODE HERE //
 
 }
 

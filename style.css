@@ -1,3 +1,4 @@
+/* General Styles */
 body {
     position: relative;
     overflow: hidden;
@@ -10,18 +11,19 @@ button {
     cursor: pointer;
 }
 
+/* Material Symbols Styles */
 .material-symbols-outlined.white {
     color: white;
     transition: opacity 0.3s;
 }
 
-.material-symbols-outlined.white:hover{
+.material-symbols-outlined.white:hover {
     opacity: 0.7;
-    transition: opacity 0.3s;
 }
 
-
-.prev-button .material-symbols-outlined.white, .next-button .material-symbols-outlined.white{
+/* Icon Sizes for Buttons */
+.prev-button .material-symbols-outlined.white,
+.next-button .material-symbols-outlined.white {
     font-size: 40px;
 }
 
@@ -29,19 +31,13 @@ button {
     font-size: 50px;
 }
 
-.visualisation-button .material-symbols-outlined.white{
+.visualisation-button .material-symbols-outlined.white,
+.playlist-button .material-symbols-outlined.white,
+.fullscreen-button .material-symbols-outlined.white {
     font-size: 35px;
 }
 
-.playlist-button .material-symbols-outlined.white{
-    font-size: 35px;
-}
-
-.fullscreen-button .material-symbols-outlined.white{
-    font-size: 35px;
-}
-
-
+/* Flexbox Utilities */
 .flex-start-center {
     display: flex;
     justify-content: start;
@@ -60,7 +56,7 @@ button {
     align-items: center;
 }
 
-
+/* Player Bar Styles */
 .player-bar {
     position: fixed;
     bottom: 0;
@@ -74,11 +70,16 @@ button {
     display: none;
 }
 
+/* Player Bar Sections */
 .player-bar-control {
     width: 25%;
 }
 
+.player-bar-features {
+    width: 25%;
+}
 
+/* Text Styles */
 .elapsed-time {
     margin-left: 50px;
     font-family: sans-serif;
@@ -95,6 +96,15 @@ button {
 }
 
 
-.player-bar-features {
-    width: 25%;
+.relative {
+    position: relative;
+}
+
+.popup-modal {
+    position: absolute;
+    background-color: #D4D2D2;
+    width: 300px;
+    height: 300px;
+    right: 10px;
+    bottom: 60px;
 }

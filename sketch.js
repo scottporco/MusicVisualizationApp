@@ -7,6 +7,15 @@ var sound = null;
 //variable for p5 fast fourier transform
 var fourier;
 
+// MY CODE HERE
+let durationInSeconds,
+	durationMinutes,
+	durationSeconds,
+	elapsedTime,
+	elapsedMinutes,
+	elapsedSeconds;
+// END MY CODE HERE
+
 function preload(){
 	sound = loadSound('assets/stomper_reggae_bit.mp3');
 }
@@ -14,12 +23,18 @@ function preload(){
 function setup() {
 	controls = new ControlsAndInput();
 	background(45, 45, 42);
-	// MY CUSTOM CODE START HERE //
+
+	// MY CODE STARTS HERE //
+	durationInSeconds = sound.duration();
+	durationMinutes = Math.floor(durationInSeconds / 60);
+	durationSeconds = Math.floor(durationInSeconds % 60);
+
 	// Create a full-window canvas & assign the canvas to the div with id "musicVisCanvas"
 	let canvas = createCanvas(windowWidth, windowHeight - 80);
 	canvas.parent("musicVisCanvas");
 	controls.initialisePlayerBarUI(); //LOADING NEW PLAYER BAR UI HERE Since it is HTML
-	// END  MY CUSTOM CODE START HERE //
+
+	// END OF MY CODE //
 
 	//instantiate the fft object
 	fourier = new p5.FFT();
@@ -37,6 +52,18 @@ function draw(){
 	//draw the selected visualisation
 	vis.selectedVisual.draw();
 
+
+
+	// MY CODE HERE
+	if (sound.isPlaying()) {
+		//GET ELAPSED TIME FROM AUDIO CLIP
+		elapsedTime = sound.currentTime();
+		elapsedMinutes = Math.floor(elapsedTime / 60);
+		elapsedSeconds = Math.floor(elapsedTime % 60);
+		let formattedSeconds = String(elapsedSeconds).padStart(2, '0');
+		controls.updateElapsedTime(`${elapsedMinutes}:${formattedSeconds} / ${durationMinutes}:${durationSeconds}`);
+	}
+	// END MY CODE HERE
 
 }
 
