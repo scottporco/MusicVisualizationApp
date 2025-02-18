@@ -1,4 +1,4 @@
-//global for the controls and input 
+//global for the controls and input
 var controls = null;
 //store visualisations in a container
 var vis = null;
@@ -6,21 +6,25 @@ var vis = null;
 var sound = null;
 //variable for p5 fast fourier transform
 var fourier;
-
+// VARIABLE FOR VIS LIST
+let visList;
 // MY CODE HERE
-let durationInSeconds,
-	durationMinutes,
-	durationSeconds,
-	elapsedTime,
-	elapsedMinutes,
-	elapsedSeconds;
+let soundFile = 'assets/stomper_reggae_bit.mp3';
+let durationInSeconds, durationMinutes, durationSeconds, elapsedTime, elapsedMinutes, elapsedSeconds;
 // END MY CODE HERE
 
 function preload(){
-	sound = loadSound('assets/stomper_reggae_bit.mp3');
+
+	sound = loadSound(soundFile);
 }
 
 function setup() {
+	//create a new visualisation container and add visualisations
+	vis = new Visualisations();
+	vis.add(new Spectrum());
+	vis.add(new WavePattern());
+	vis.add(new Needles());
+
 	controls = new ControlsAndInput();
 	background(45, 45, 42);
 
@@ -33,25 +37,20 @@ function setup() {
 	let canvas = createCanvas(windowWidth, windowHeight - 80);
 	canvas.parent("musicVisCanvas");
 	controls.initialisePlayerBarUI(); //LOADING NEW PLAYER BAR UI HERE Since it is HTML
-
 	// END OF MY CODE //
 
 	//instantiate the fft object
 	fourier = new p5.FFT();
-	//create a new visualisation container and add visualisations
-	vis = new Visualisations();
-	vis.add(new Spectrum());
-	vis.add(new WavePattern());
-	vis.add(new Needles());
-
-
+	console.log('vis.getVisualNamesArray()',vis.getVisualNamesArray());
 }
 
 function draw(){
+
 	background(0);
+
 	//draw the selected visualisation
 	vis.selectedVisual.draw();
-
+	controls.draw();
 
 
 	// MY CODE HERE
@@ -63,6 +62,7 @@ function draw(){
 		let formattedSeconds = String(elapsedSeconds).padStart(2, '0');
 		controls.updateElapsedTime(`${elapsedMinutes}:${formattedSeconds} / ${durationMinutes}:${durationSeconds}`);
 	}
+
 	// END MY CODE HERE
 
 }
@@ -71,13 +71,13 @@ function draw(){
 // function mouseClicked(){
 // 	controls.mousePressed();
 // }
+//
+// function keyPressed(){
+// 	controls.keyPressed(keyCode);
+// }
 
-function keyPressed(){
-	controls.keyPressed(keyCode);
-}
 
-
-//when the window has been resized. Resize canvas to fit 
+//when the window has been resized. Resize canvas to fit
 //if the visualisation needs to be resized call its onResize method
 function windowResized(){
 	resizeCanvas(windowWidth, windowHeight);
