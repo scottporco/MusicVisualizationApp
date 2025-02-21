@@ -20,7 +20,6 @@ function ControlsAndInput(){
 	//responds to keyboard presses
 	//@param keycode the ascii code of the keypressed
 	// this.keyPressed = function(keycode){
-	// 	console.log(keycode, key);
 	// 	if(keycode == 32){
 	// 		this.menuDisplayed = !this.menuDisplayed;
 	// 	}
@@ -35,7 +34,6 @@ function ControlsAndInput(){
 	// Separate function for visualization item click handling
 	this.handleVisualizationItemClick = function (item, index) {
 		// Add custom click handling logic here
-		console.log(item, index);
 		this.selectVisualType(index);
 	}
 
@@ -66,7 +64,7 @@ function ControlsAndInput(){
 		}
 		pop();
 
-
+		this.playListData.popUpData = uploadSoundFile.audioFiles;
 
 	};
 
@@ -89,7 +87,7 @@ function ControlsAndInput(){
 		title: 'Select a Visualisation',
 		menuType:'visualization',
 		addBtn: false,
-		popUpData:vis.getVisualNamesArray(),
+		popUpData:[...vis.getVisualNamesArray()],
 
 	};
 
@@ -100,6 +98,10 @@ function ControlsAndInput(){
 		addBtn: true,
 		popUpData: [],
 	}
+
+	this.visualizationPopup = new PopUpConstructor(this.visualizationData, `visualization-list-popup`);
+	this.playListPopup = new PopUpConstructor(this.playListData, 'play-list-popup');
+
 
 
 	this.initialisePlayerBarUI = function () {
@@ -136,14 +138,14 @@ function ControlsAndInput(){
 				
 				<div class="player-bar-features flex-evenly-center">
 				
-					<div class="visualization-button relative">
-						<span class="material-symbols-outlined white">
+					<div class="visualization-ui-hook relative">
+						<span class="visualization-event material-symbols-outlined white">
 							key_visualizer
 						</span>
 					</div>
 					
-					<div class="playlist-button relative">
-						<span class="material-symbols-outlined white">
+					<div class="playlist-ui-hook relative">
+						<span class="playlist-event material-symbols-outlined white">
 							playlist_play
 						</span>
 					</div>
@@ -158,19 +160,17 @@ function ControlsAndInput(){
 			</nav>
 		`);
 
-		let visualizationPopup = new PopUpConstructor(this.visualizationData);
-		let playListPopup = new PopUpConstructor(this.playListData);
+		let visualizationUIHook = document.querySelector(".playlist-ui-hook");
+		visualizationUIHook.innerHTML += this.visualizationPopup.initialisePopUp();
+
+		let playListUIHook = document.querySelector(".visualization-ui-hook");
+		playListUIHook.innerHTML += this.playListPopup.initialisePopUp();
 
 		// SET CLICK EVENTS HERE
-		let playListButton
-			= document.querySelector(
-				".playlist-button"
-		);
+		let playListButton = document.querySelector(".playlist-event");
+		let visualizationButton= document.querySelector(".visualization-event");
 
-		let visualizationButton
-			= document.querySelector(
-			".visualization-button"
-		);
+
 
 
 
@@ -188,32 +188,35 @@ function ControlsAndInput(){
 		})
 
 
+
 		playListButton.addEventListener("click", () => {
 			// Toggle playlist popup and handle callback
-			playListPopup.toggle((isOpen) => {
+			this.playListPopup.toggle((isOpen) => {
+				console.log('click');
 				if (isOpen) {
-					// Initialize and insert the popup into the button
-					playListButton.innerHTML = playListPopup.initialisePopUp('play-list-popup') + playListButton.innerHTML;
-				} else {
-					// Remove the popup when closed
-					document.querySelector('.play-list-popup')?.remove();
+					console.log(isOpen);
+					uploadSoundFile.uploadFile( (status) => {
+						this.playListData.popUpData = uploadSoundFile.audioFiles;
+						if (status === "success") {
+							this.playListPopup.reInit(this.playListData);
+						}
+					});
 				}
 			});
 		});
 
+
 		visualizationButton.addEventListener('click', (event)=>{
+			console.log('click');
 			//load popup
-			visualizationPopup.toggle((callback)=>{
-				if(callback){
-					visualizationButton.innerHTML = visualizationPopup.initialisePopUp(`visualization-list-popup`) + visualizationButton.innerHTML;
+			this.visualizationPopup.toggle((isOpen)=>{
+				if(isOpen){
 					// Attach click event listeners to visualization items
 					document.querySelectorAll('.visualization-item').forEach((item, index) => {
 						item.addEventListener('click',()=>{
 							this.handleVisualizationItemClick(item, index)
 						});
 					});
-				} else {
-					document.querySelector(`.visualization-list-popup`).remove();
 				}
 			});
 		});

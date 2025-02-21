@@ -1,29 +1,48 @@
 // MY CODE HERE
-function PopUpConstructor(data) {
+function PopUpConstructor(data, className) {
 
+    this.data = data
     this.isOpen = false;
-    this.sectionBody = generateSectionBody(data.popUpData);
+    this.className = className;
 
     this.toggle = function (callback) {
+        console.log(this.className);
         this.isOpen = !this.isOpen;
-        // CALLBACK FOR CHANGING THE VALUE OF this.isOpen
-        // then call our this.initialisePopUp function;
-        callback(this.isOpen);
-    };
-    console.log(data.popUpData);
+        document.querySelector(`.${this.className}`).classList.toggle('hidden');
 
-    function generateSectionBody(items) {
+        if (typeof callback === 'function') { // IF A DEV NEEDS A BOOLEAN CALLBACK
+            callback(this.isOpen);
+        }
+    };
+
+
+
+     this.generateSectionBody = function(items) {
         // RESEARCHING MAP IN THE JAVASCRIPT WORLD
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
-        return items.map(item => `<li class="section-body-list ${data.menuType}-item">${item}</li>`).join('');
+        if(data.menuType === "playlist"){
+            console.log('items playlist', items)
+
+        }
+        else
+        {
+            return items.map(item =>
+                `<li class="section-body-list ${data.menuType}-item">
+                    <span>
+                        ${item}
+                    </span>
+                </li>`)
+                .join('');
+        }
     }
 
-    this.initialisePopUp = function (classname) {
-        return `<aside class="popup-modal ${classname}">
+    this.initialisePopUp = function () {
+        return `<aside class="popup-modal hidden ${this.className} ">
 				   <nav>
 				        <header>
 				            <h2>${data.title}</h2>
-				            <button class="${ data.addBtn === false ? 'hidden' : 'block'}">
+				            <button class="upload-audio-file ${data.addBtn === false ? 'hidden' : 'block'}">
+				            <input type="file" id="fileInput" style="display: none;">
                                 <span class="material-symbols-outlined white">
                                     add_box
                                 </span>
@@ -31,7 +50,7 @@ function PopUpConstructor(data) {
 				        </header>
                        <section>
                             <ol>
-                                ${this.sectionBody}
+                                ${this.generateSectionBody(data.popUpData)}
                             </ol>
                         </section>
                           

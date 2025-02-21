@@ -10,6 +10,7 @@ var fourier;
 let visList;
 // MY CODE HERE
 let soundFile = 'assets/stomper_reggae_bit.mp3';
+let uploadSoundFile;
 let durationInSeconds, durationMinutes, durationSeconds, elapsedTime, elapsedMinutes, elapsedSeconds;
 // END MY CODE HERE
 
@@ -26,6 +27,8 @@ function setup() {
 	vis.add(new Needles());
 
 	controls = new ControlsAndInput();
+	uploadSoundFile = new UploadFileConstructor();
+	playlistMenuConstructor = new PlaylistMenuConstructor();
 	background(45, 45, 42);
 
 	// MY CODE STARTS HERE //
@@ -41,7 +44,6 @@ function setup() {
 
 	//instantiate the fft object
 	fourier = new p5.FFT();
-	console.log('vis.getVisualNamesArray()',vis.getVisualNamesArray());
 }
 
 function draw(){
@@ -51,9 +53,12 @@ function draw(){
 	//draw the selected visualisation
 	vis.selectedVisual.draw();
 	controls.draw();
-
-
+	uploadSoundFile.audioFiles;
+	playlistMenuConstructor.draw();
 	// MY CODE HERE
+
+
+
 	if (sound.isPlaying()) {
 		//GET ELAPSED TIME FROM AUDIO CLIP
 		elapsedTime = sound.currentTime();
