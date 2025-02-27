@@ -1,25 +1,21 @@
 let UploadFileConstructor = function () {
 
-    this.audioFiles = [{
-        name:'stomper_reggae_bit.mp3',
-        url: 'assets/stomper_reggae_bit.mp3',
-    }];
 
     // Handle file selection
     this.handleFileSelect = function (event) {
         const files = event.target.files;
-
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             const objectURL = URL.createObjectURL(file);
-            this.audioFiles.push({ name: file.name, url: objectURL });
+            audioFiles.push({ name: file.name, url: objectURL });
         }
+
         this.updateFileList();
     }
 
-    // Update the displayed list of files
-    this.updateFileList = function () {
-        controls.playListData.popUpData = this.audioFiles;
+    this.updateFileList = function () {     // Update the displayed list of files
+        controls.playListData.popUpData = audioFiles;
+        soundTrack.initPlayList();
     }
 
 
@@ -44,8 +40,8 @@ let UploadFileConstructor = function () {
             callback('fail');
             return false;
         }
-
     };
 
+    this.updateFileList();
 
 };

@@ -172,10 +172,22 @@ button {
     display: list-item;
 }
 
-.popup-modal nav section ol li.section-body-list span {
+.popup-modal nav section ol li.section-body-list div {
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.popup-modal nav section ol li.section-body-list div span.track-title {
     white-space: nowrap;       /* Prevents text from wrapping to the next line */
     overflow: hidden;          /* Hides any text that overflows the container */
     text-overflow: ellipsis;   /* Adds "..." when text overflows */
-    width: 275px;              /* Set a fixed width or max-width for truncation */
+    width: 225px;              /* Set a fixed width or max-width for truncation */
+    display: block;
+}
+
+.popup-modal nav section ol li.section-body-list div span.remove-track {
+    width: 30px;              /* Set a fixed width or max-width for truncation */
     display: block;
 }

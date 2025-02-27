@@ -9,15 +9,28 @@ var fourier;
 // VARIABLE FOR VIS LIST
 let visList;
 // MY CODE HERE
+let audioFiles = [{
+	name:'stomper_reggae_bit.mp3',
+	url: 'assets/stomper_reggae_bit.mp3',
+}]
 let soundFile = 'assets/stomper_reggae_bit.mp3';
+let playlist = [];
+let currentTrack = null;
 let uploadSoundFile;
-let durationInSeconds, durationMinutes, durationSeconds, elapsedTime, elapsedMinutes, elapsedSeconds;
+let playlistMenuConstructor;
+let durationInSeconds, 
+	durationMinutes, 
+	durationSeconds, 
+	elapsedTime, 
+	elapsedMinutes, 
+	elapsedSeconds;
+let soundTrack;
 // END MY CODE HERE
 
-function preload(){
-
-	sound = loadSound(soundFile);
+function preload() {
+	currentTrack = loadSound(audioFiles[0].url);
 }
+
 
 function setup() {
 	//create a new visualisation container and add visualisations
@@ -27,45 +40,46 @@ function setup() {
 	vis.add(new Needles());
 
 	controls = new ControlsAndInput();
+	soundTrack = new SoundTrack();
 	uploadSoundFile = new UploadFileConstructor();
 	playlistMenuConstructor = new PlaylistMenuConstructor();
+
+
 	background(45, 45, 42);
 
 	// MY CODE STARTS HERE //
-	durationInSeconds = sound.duration();
-	durationMinutes = Math.floor(durationInSeconds / 60);
-	durationSeconds = Math.floor(durationInSeconds % 60);
 
 	// Create a full-window canvas & assign the canvas to the div with id "musicVisCanvas"
 	let canvas = createCanvas(windowWidth, windowHeight - 80);
 	canvas.parent("musicVisCanvas");
-	controls.initialisePlayerBarUI(); //LOADING NEW PLAYER BAR UI HERE Since it is HTML
-	// END OF MY CODE //
 
+	controls.initialisePlayerBarUI(); //LOADING NEW PLAYER BAR UI HERE Since it is HTML
+	uploadSoundFile.updateFileList(); // INIT THE DEFAULT TRACK
+
+	// END OF MY CODE //
 	//instantiate the fft object
 	fourier = new p5.FFT();
 }
 
-function draw(){
+function draw() {
 
 	background(0);
 
 	//draw the selected visualisation
 	vis.selectedVisual.draw();
 	controls.draw();
-	uploadSoundFile.audioFiles;
-	playlistMenuConstructor.draw();
-	// MY CODE HERE
+	audioFiles;
+	// MY CODE HERE	
 
-
-
-	if (sound.isPlaying()) {
-		//GET ELAPSED TIME FROM AUDIO CLIP
-		elapsedTime = sound.currentTime();
-		elapsedMinutes = Math.floor(elapsedTime / 60);
-		elapsedSeconds = Math.floor(elapsedTime % 60);
-		let formattedSeconds = String(elapsedSeconds).padStart(2, '0');
-		controls.updateElapsedTime(`${elapsedMinutes}:${formattedSeconds} / ${durationMinutes}:${durationSeconds}`);
+	if (currentTrack) {
+		if (currentTrack.isPlaying()) {
+			//GET ELAPSED TIME FROM AUDIO CLIP
+			elapsedTime = currentTrack.currentTime();
+			elapsedMinutes = Math.floor(elapsedTime / 60);
+			elapsedSeconds = Math.floor(elapsedTime % 60);
+			let formattedSeconds = String(elapsedSeconds).padStart(2, '0');
+			controls.updateElapsedTime(`${elapsedMinutes}:${formattedSeconds} / ${durationMinutes}:${durationSeconds}`);
+		}
 	}
 
 	// END MY CODE HERE
@@ -84,9 +98,9 @@ function draw(){
 
 //when the window has been resized. Resize canvas to fit
 //if the visualisation needs to be resized call its onResize method
-function windowResized(){
+function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
-	if(vis.selectedVisual.hasOwnProperty('onResize')){
+	if (vis.selectedVisual.hasOwnProperty('onResize')) {
 		vis.selectedVisual.onResize();
 	}
 }

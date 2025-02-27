@@ -46,6 +46,57 @@ function ControlsAndInput(){
 	}
 
 
+	// MY CUSTOM CODE STARTS HERE //
+	this.updateElapsedTime = function (elapsedTime) {
+		document.querySelector('.elapsed-time').innerHTML = `${elapsedTime}`
+	}
+
+	this.menu = function(){
+		let list = [];
+		//draw out menu items for each visualisation
+		for(var i = 0; i < vis.visuals.length; i++){
+			var yLoc = 70 + i * 40;
+			text((i+1) + ":  " +vis.visuals[i].name, 100, yLoc);
+		}
+		return list;
+	};
+
+	this.visualizationData = {
+		title: 'Select a Visualisation',
+		menuType:'visualization',
+		addBtn: false,
+		popUpData:[...vis.getVisualNamesArray()],
+
+	};
+
+	this.togglePlayBtn = function(selector){
+		if (currentTrack.isPlaying()) {
+			selector.innerHTML = "pause";
+		} else {
+			selector.innerHTML = "play_arrow";
+		}
+	}
+
+	this.nextTrack = function(){
+		soundTrack.playTrack(soundTrack.currentTrackIndex+1);
+	}
+
+	this.prevTrack = function(){
+		soundTrack.playTrack(soundTrack.currentTrackIndex-1);
+	}
+
+	this.updateTrackTitle = function (track){
+		console.log(track);
+		document.querySelector('.track-info p').innerHTML = this.cleanSoundFileName(track);
+	}
+
+
+	this.playListData = {
+		title: 'My Playlist',
+		menuType:'playlist',
+		addBtn: true,
+		popUpData: [],
+	}
 
 	//draws the playback button and potentially the menu
 	this.draw = function(){ // Commented out in sketch.js for now
@@ -63,45 +114,13 @@ function ControlsAndInput(){
 			this.menu();
 		}
 		pop();
-
-		this.playListData.popUpData = uploadSoundFile.audioFiles;
-
-	};
-
-	// MY CUSTOM CODE STARTS HERE //
-	this.updateElapsedTime = function (elapsedTime) {
-		document.querySelector('.elapsed-time').innerHTML = `${elapsedTime}`
-	}
-
-	this.menu = function(){
-		let list = [];
-		//draw out menu items for each visualisation
-		for(var i = 0; i < vis.visuals.length; i++){
-			var yLoc = 70 + i*40;
-			text((i+1) + ":  " +vis.visuals[i].name, 100, yLoc);
-		}
-		return list;
-	};
-
-	this.visualizationData = {
-		title: 'Select a Visualisation',
-		menuType:'visualization',
-		addBtn: false,
-		popUpData:[...vis.getVisualNamesArray()],
-
+		this.playListData.popUpData = audioFiles;
 	};
 
 
-	this.playListData = {
-		title: 'My Playlist',
-		menuType:'playlist',
-		addBtn: true,
-		popUpData: [],
-	}
 
 	this.visualizationPopup = new PopUpConstructor(this.visualizationData, `visualization-list-popup`);
 	this.playListPopup = new PopUpConstructor(this.playListData, 'play-list-popup');
-
 
 
 	this.initialisePlayerBarUI = function () {
@@ -128,12 +147,12 @@ function ControlsAndInput(){
 					</button>
 						
 					<div class="elapsed-time">
-						 ${this.elapsedTimeMin}:${this.elapsedTimeSec} / ${durationMinutes}:${durationSeconds}
+						 
 					</div>
 				</div>
 				
 				<div class="track-info">
-					<p> ${this.cleanSoundFileName(soundFile)} </p>
+					<p>  </p>
 				</div>
 				
 				<div class="player-bar-features flex-evenly-center">
@@ -160,6 +179,9 @@ function ControlsAndInput(){
 			</nav>
 		`);
 
+		let prevButton = document.querySelector('.prev-button');
+		let nextButton = document.querySelector('.next-button');
+
 		let visualizationUIHook = document.querySelector(".playlist-ui-hook");
 		visualizationUIHook.innerHTML += this.visualizationPopup.initialisePopUp();
 
@@ -171,34 +193,27 @@ function ControlsAndInput(){
 		let visualizationButton= document.querySelector(".visualization-event");
 
 
-
-
-
 		let playButton = document.querySelector(".play-button");
 		let playIcon = document.querySelector(".play-button .material-symbols-outlined");
 
+		prevButton.addEventListener("click", this.prevTrack);
+		nextButton.addEventListener("click", this.nextTrack);
+
 		playButton.addEventListener("click", () => {
-			if (sound.isPlaying()) {
-				sound.pause();
-				playIcon.innerHTML = "play_arrow";
-			} else {
-				sound.loop();
-				playIcon.innerHTML = "pause";
-			}
+			this.togglePlayBtn(playIcon);
 		})
-
-
 
 		playListButton.addEventListener("click", () => {
 			// Toggle playlist popup and handle callback
 			this.playListPopup.toggle((isOpen) => {
-				console.log('click');
 				if (isOpen) {
+					playlistMenuConstructor.draw();
 					console.log(isOpen);
 					uploadSoundFile.uploadFile( (status) => {
-						this.playListData.popUpData = uploadSoundFile.audioFiles;
 						if (status === "success") {
-							this.playListPopup.reInit(this.playListData);
+							this.playListData.popUpData = audioFiles;
+							playlistMenuConstructor.draw();
+							soundTrack.trackEventListeners();
 						}
 					});
 				}
@@ -207,7 +222,6 @@ function ControlsAndInput(){
 
 
 		visualizationButton.addEventListener('click', (event)=>{
-			console.log('click');
 			//load popup
 			this.visualizationPopup.toggle((isOpen)=>{
 				if(isOpen){
