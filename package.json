@@ -1,0 +1,14 @@
+{
+  "name": "music-visualization-app",
+  "version": "1.0.0",
+  "description": "In this case study you will be completing a simple music visualisation program that contains three separate visualisations.",
+  "main": "controlsAndInput.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

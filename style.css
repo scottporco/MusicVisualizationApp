@@ -1,0 +1,193 @@
+/* ==========================
+   General Styles
+   ========================== */
+body {
+    position: relative;
+    overflow: hidden;
+}
+
+button {
+    background: none;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+.relative {
+    position: relative;
+}
+
+/* ==========================
+   Icon Styles (Material Symbols)
+   ========================== */
+.material-symbols-outlined.white {
+    cursor: pointer;
+    color: white;
+    transition: opacity 0.3s;
+}
+
+.material-symbols-outlined.white:hover {
+    opacity: 0.7;
+}
+
+/* Icon Sizes for Specific Buttons */
+.prev-button .material-symbols-outlined.white,
+.next-button .material-symbols-outlined.white {
+    font-size: 40px;
+}
+
+.play-button .material-symbols-outlined.white {
+    font-size: 50px;
+}
+
+.visualisation-button .material-symbols-outlined.white,
+.playlist-button .material-symbols-outlined.white,
+.fullscreen-button .material-symbols-outlined.white {
+    font-size: 35px;
+}
+
+/* ==========================
+   Flexbox Utilities
+   ========================== */
+.flex-start-center {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.flex-center-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-evenly-center {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+/* ==========================
+   Player Bar Styles
+   ========================== */
+.player-bar {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 90px;
+    background-color: #2D2A2A;
+    border-top: 2px solid #B22525;
+}
+
+.player-bar.fullscreen {
+    display: none;
+}
+
+/* Player Bar Sections */
+.player-bar-control,
+.player-bar-features {
+    width: 25%;
+}
+
+/* ==========================
+   Text Styles
+   ========================== */
+.elapsed-time {
+    margin-left: 50px;
+    font-family: sans-serif;
+    color: #D4D2D2;
+    font-size: 20px;
+}
+
+.track-info {
+    width: 50%;
+    text-align: center;
+    font-family: sans-serif;
+    color: white;
+    font-size: 16px;
+}
+
+/* ==========================
+   Popup Modal Styles
+   ========================== */
+.popup-modal {
+    position: absolute;
+    right: -25px;
+    bottom: 75px;
+    width: 300px;
+    height: 300px;
+    padding: 20px;
+    background-color: #2D2A2A;
+    font-family: "Helvetica Neue", "Helvetica", sans-serif;
+    overflow: scroll;
+}
+
+/* Popup Modal Arrow (Triangle) */
+.popup-modal::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -50px;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background: #2D2A2A;
+    clip-path: polygon(50% 60%, 0% 0%, 100% 0%);
+}
+
+/* Popup Modal Header */
+.popup-modal nav header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #D8D8D8;
+}
+
+.popup-modal h2 {
+    color: #D8D8D8;
+    text-align: left;
+    font-size: 1.45em;
+    font-family: "Helvetica Neue", "Helvetica", sans-serif;
+}
+
+/* Popup Modal List Items */
+
+.popup-modal nav section ol {
+    padding-inline-start: 30px;
+}
+
+.popup-modal nav section ol li.section-body-list {
+    color: #D8D8D8;
+    text-align: left;
+    font-size: 1.3em;
+    margin: 15px 0;
+    list-style-type: decimal;
+    font-family: "Helvetica Neue", "Helvetica", sans-serif;
+    cursor: pointer;
+    display: list-item;
+}
+
+.popup-modal nav section ol li.section-body-list div {
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.popup-modal nav section ol li.section-body-list div span.track-title {
+    white-space: nowrap;       /* Prevents text from wrapping to the next line */
+    overflow: hidden;          /* Hides any text that overflows the container */
+    text-overflow: ellipsis;   /* Adds "..." when text overflows */
+    width: 225px;              /* Set a fixed width or max-width for truncation */
+    display: block;
+}
+
+.popup-modal nav section ol li.section-body-list div span.remove-track {
+    width: 30px;              /* Set a fixed width or max-width for truncation */
+    display: block;
+}
