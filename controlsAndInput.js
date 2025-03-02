@@ -16,7 +16,6 @@ function ControlsAndInput(){
 	// END MY CODE HERE
 
 	//make the window fullscreen or revert to windowed
-
 	//responds to keyboard presses
 	//@param keycode the ascii code of the keypressed
 	// this.keyPressed = function(keycode){
@@ -201,6 +200,7 @@ function ControlsAndInput(){
 
 		playButton.addEventListener("click", () => {
 			this.togglePlayBtn(playIcon);
+			soundTrack.resumePlay();
 		})
 
 		playListButton.addEventListener("click", () => {

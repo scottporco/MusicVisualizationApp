@@ -1,6 +1,6 @@
 let SoundTrack = function() {
 
-    this.currentTrackIndex;
+    this.currentTrackIndex = 0;
 
     this.initPlayList = function (){
         console.log('initPlayList');
@@ -26,7 +26,19 @@ let SoundTrack = function() {
     }
 
     this.playTrack = function(index) {
-        this.currentTrackIndex = index;
+        if (index != false){
+            this.currentTrackIndex = index;
+        }
+
+
+        // Handle looping: if at the last track, restart to 0; if at -1, go to the last track
+        if (this.currentTrackIndex >= playlist.length) {
+            this.currentTrackIndex = 0;
+        } else if (this.currentTrackIndex < 0) {
+            this.currentTrackIndex = playlist.length - 1;
+        }
+
+
         // Stop the currently playing track
         if (currentTrack && currentTrack.isPlaying()) {
             currentTrack.stop();
@@ -34,7 +46,7 @@ let SoundTrack = function() {
         }
 
         // Play the selected track
-        currentTrack = playlist[index];
+        currentTrack = playlist[this.currentTrackIndex];
         currentTrack.play();
 
         durationInSeconds = currentTrack.duration();
@@ -42,10 +54,17 @@ let SoundTrack = function() {
         durationSeconds = Math.floor(durationInSeconds % 60);
 
         controls.togglePlayBtn(document.querySelector(".play-button .material-symbols-outlined"));
-        controls.updateTrackTitle(audioFiles[index].name);
+        controls.updateTrackTitle(audioFiles[this.currentTrackIndex].name);
+    }
 
-
-
+    this.resumePlay = function () {
+        if (currentTrack && currentTrack.isPlaying()) {
+            currentTrack.stop();
+            controls.togglePlayBtn(document.querySelector(".play-button .material-symbols-outlined"));
+        } else {
+            this.playTrack(false);
+            currentTrack.play();
+        }
     }
 
     this.initPlayList();
