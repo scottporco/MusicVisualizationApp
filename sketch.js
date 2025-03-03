@@ -13,18 +13,19 @@ let audioFiles = [{
 	name:'stomper_reggae_bit.mp3',
 	url: 'assets/stomper_reggae_bit.mp3',
 }]
-let soundFile = 'assets/stomper_reggae_bit.mp3';
-let playlist = [];
-let currentTrack = null;
-let uploadSoundFile;
-let playlistMenuConstructor;
-let durationInSeconds, 
+
+let playlist = [],
+	currentTrack = null,
+	uploadSoundFile,
+	playlistMenuConstructor,
+	durationInSeconds,
 	durationMinutes, 
 	durationSeconds, 
 	elapsedTime, 
 	elapsedMinutes, 
-	elapsedSeconds;
-let soundTrack;
+	elapsedSeconds,
+	soundTrack,
+	trackSeekerBar;
 // END MY CODE HERE
 
 function preload() {
@@ -43,7 +44,7 @@ function setup() {
 	soundTrack = new SoundTrack();
 	uploadSoundFile = new UploadFileConstructor();
 	playlistMenuConstructor = new PlaylistMenuConstructor();
-
+	trackSeekerBar = new TrackSeekerBar();
 
 	background(45, 45, 42);
 
@@ -81,6 +82,8 @@ function draw() {
 			controls.updateElapsedTime(`${elapsedMinutes}:${formattedSeconds} / ${durationMinutes}:${durationSeconds}`);
 		}
 	}
+
+	trackSeekerBar.draw();
 
 	// END MY CODE HERE
 
