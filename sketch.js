@@ -39,6 +39,8 @@ function setup() {
 	vis.add(new Spectrum());
 	vis.add(new WavePattern());
 	vis.add(new Needles());
+	vis.add(new CircularWaveWeather());
+	vis.add(new QuoteVisualization());
 
 	controls = new ControlsAndInput();
 	soundTrack = new SoundTrack();

@@ -13,9 +13,10 @@ let TrackSeekerBar = function () {
         this.barWidth = width;
         this.trackLength = currentTrack.duration();
         this.barY = height - (this.barHeight + 15);
+        this.playing = currentTrack.isPlaying(); // Ensure `this.playing` is always in sync
 
         // Always get the latest playback time from the track
-        if (!this.dragging) {
+        if (!this.dragging && this.playing) { // Only update when playing
             this.currentTime = currentTrack.currentTime();
         }
 
@@ -82,11 +83,12 @@ let TrackSeekerBar = function () {
 
     this.keyPressed = () => {
         if (key === ' ') {
-            this.playing = !this.playing;
-            if (this.playing) {
-                currentTrack.play();
-            } else {
+            if (currentTrack.isPlaying()) {
                 currentTrack.pause();
+                this.playing = false; // Sync playing state
+            } else {
+                currentTrack.play();
+                this.playing = true; // Sync playing state
             }
         }
     };

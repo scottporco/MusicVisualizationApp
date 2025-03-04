@@ -85,7 +85,6 @@ function ControlsAndInput(){
 	}
 
 	this.updateTrackTitle = function (track){
-		console.log(track);
 		document.querySelector('.track-info p').innerHTML = this.cleanSoundFileName(track);
 	}
 
@@ -208,7 +207,6 @@ function ControlsAndInput(){
 			this.playListPopup.toggle((isOpen) => {
 				if (isOpen) {
 					playlistMenuConstructor.draw();
-					console.log(isOpen);
 					uploadSoundFile.uploadFile( (status) => {
 						if (status === "success") {
 							this.playListData.popUpData = audioFiles;
@@ -257,6 +255,28 @@ function ControlsAndInput(){
 				}
 			}
 		} // END: Got help on stackoverflow to make this work //
+
+		document.addEventListener("click", (event) => {
+			const playListPopupElement = document.querySelector(".play-list-popup");
+			const visualizationPopupElement = document.querySelector(".visualization-list-popup");
+
+			// Check if the click was inside any popup or their toggle buttons
+			const clickedInsidePopup =
+				(playListPopupElement && playListPopupElement.contains(event.target)) ||
+				(visualizationPopupElement && visualizationPopupElement.contains(event.target)) ||
+				event.target.closest(".playlist-event") ||
+				event.target.closest(".visualization-event");
+
+			if (!clickedInsidePopup) {
+				if (this.playListPopup.isOpen) {
+					this.playListPopup.toggle();
+				}
+				if (this.visualizationPopup.isOpen) {
+					this.visualizationPopup.toggle();
+				}
+			}
+		});
+
 	}
 	// END OF MY CODE HERE //
 

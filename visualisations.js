@@ -18,8 +18,12 @@ function Visualisations() {
 	// Select a visualisation using its name property
 	//@param visName: name property of the visualisation
 	this.selectVisual = function(visName) {
-		for (var i = 0; i < this.visuals.length; i++) {
-			if (visName == this.visuals[i].name) {
+		for (let i = 0; i < this.visuals.length; i++) {
+			if (this.selectedVisual && this.selectedVisual.name === "CircularWaveWeather") {
+				this.selectedVisual.hideDropdown();
+			}
+
+			if (visName === this.visuals[i].name) {
 				this.selectedVisual = this.visuals[i];
 			}
 		}

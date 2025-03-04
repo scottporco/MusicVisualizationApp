@@ -6,7 +6,6 @@ function PopUpConstructor(data, className) {
     this.className = className;
 
     this.toggle = function (callback) {
-        console.log(this.className);
         this.isOpen = !this.isOpen;
         document.querySelector(`.${this.className}`).classList.toggle('hidden');
 
@@ -15,17 +14,10 @@ function PopUpConstructor(data, className) {
         }
     };
 
-
-
      this.generateSectionBody = function(items) {
         // RESEARCHING MAP IN THE JAVASCRIPT WORLD
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
-        if(data.menuType === "playlist"){
-            console.log('items playlist', items)
-
-        }
-        else
-        {
+        if(data.menuType !== "playlist"){
             return items.map(item =>
                 `<li class="section-body-list ${data.menuType}-item">
                     <span>
@@ -34,6 +26,7 @@ function PopUpConstructor(data, className) {
                 </li>`)
                 .join('');
         }
+         return ''; // Return empty string if it's a playlist
     }
 
     this.initialisePopUp = function () {

@@ -3,7 +3,6 @@ let SoundTrack = function() {
     this.currentTrackIndex = 0;
 
     this.initPlayList = function (){
-        console.log('initPlayList');
         //RESET THE ARRAY to remove the duplicates
         playlist=[];
         // Load all uploaded tracks into the playlist array
@@ -12,7 +11,6 @@ let SoundTrack = function() {
             playlist[i] = loadSound(playlist[i]);
         }
         this.trackEventListeners();
-        console.log(playlist);
     }
 
     this.trackEventListeners = function () {
