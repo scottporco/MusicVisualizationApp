@@ -116,14 +116,13 @@ button {
    ========================== */
 .popup-modal {
     position: absolute;
-    right: -25px;
-    bottom: 75px;
+    right: -35px;
+    bottom: 110px;
     width: 300px;
     height: 300px;
     padding: 20px;
     background-color: #2D2A2A;
     font-family: "Helvetica Neue", "Helvetica", sans-serif;
-    overflow: scroll;
 }
 
 /* Popup Modal Arrow (Triangle) */
@@ -145,6 +144,12 @@ button {
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #D8D8D8;
+}
+/* Set the inner nav to have scroll */
+.popup-modal nav {
+    overflow: scroll;
+    width: 100%;
+    height: auto;
 }
 
 .popup-modal h2 {

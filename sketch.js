@@ -25,13 +25,18 @@ let playlist = [],
 	elapsedMinutes, 
 	elapsedSeconds,
 	soundTrack,
+	soundIsReady = false,
 	trackSeekerBar;
 // END MY CODE HERE
 
 function preload() {
-	currentTrack = loadSound(audioFiles[0].url);
+	currentTrack = loadSound(audioFiles[0].url, soundLoaded);
 }
 
+let soundLoaded = function() {
+	console.log('Sound file loaded!', currentTrack);
+	soundIsReady = true; // This is a flag to check if it's ready.
+}
 
 function setup() {
 	//create a new visualisation container and add visualisations
@@ -62,6 +67,32 @@ function setup() {
 	// END OF MY CODE //
 	//instantiate the fft object
 	fourier = new p5.FFT();
+
+	/*
+	* This setTimeout was a solution to load the initial track into the SoundTrack Constructor on first time app load.
+	* */
+	setTimeout(function (){
+		if (soundIsReady) {
+			// currentTrack.play();
+			if (currentTrack) {
+				soundTrack.playTrack(soundTrack.currentTrackIndex + 1); // If already loaded from Preload, play immediately
+				soundTrack.togglePlay();
+			}
+		} else {
+			// Wait until sound is ready before playing
+			let checkInterval = setInterval(() => {
+				if (soundIsReady) {
+					// currentTrack.play();
+					if (currentTrack) {
+						soundTrack.playTrack(soundTrack.currentTrackIndex + 1); // If already loaded from Preload, play immediately
+						soundTrack.togglePlay();
+					}
+					clearInterval(checkInterval);
+				}
+			}, 100); // Check every 100ms
+		}
+	}, 1000)
+
 }
 
 function draw() {
@@ -91,21 +122,24 @@ function draw() {
 
 }
 
-// Commenting this out for now.
-// function mouseClicked(){
-// 	controls.mousePressed();
-// }
-//
-// function keyPressed(){
-// 	controls.keyPressed(keyCode);
-// }
-
 
 //when the window has been resized. Resize canvas to fit
 //if the visualisation needs to be resized call its onResize method
 function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
+
+	if (vis.selectedVisual.hasOwnProperty('onResize')) {
+		vis.selectedVisual.onResize();
+	}
+
+	// Ensure seek bar is redrawn after resize
+	if (trackSeekerBar) {
+		console.log("Reinitializing seek bar after resize");
+		trackSeekerBar.draw(); // Force redraw after resize
+	}
+
 	if (vis.selectedVisual.hasOwnProperty('onResize')) {
 		vis.selectedVisual.onResize();
 	}
 }
+

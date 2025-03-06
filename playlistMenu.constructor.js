@@ -30,7 +30,7 @@ let PlaylistMenuConstructor = function () {
             document.querySelectorAll(`.remove-track`).forEach((item, index) => {
                 item.addEventListener('click', () => { // CLICK TO REMOVE
                     delete audioFiles[index]
-                    if (typeof callback === 'function') { // IF A DEV NEEDS A BOOLEAN CALLBACK
+                    if (typeof callback === 'function') { // IF A DEVELOPER NEEDS A BOOLEAN CALLBACK
                         callback();
                     }
                 });

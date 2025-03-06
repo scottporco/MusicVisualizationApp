@@ -93,6 +93,18 @@ let TrackSeekerBar = function () {
         }
     };
 
+    window.addEventListener("resize", () => {
+        if (soundTrack.currentTrack && soundTrack.currentTrack.isPlaying()) {
+            let currentTime = soundTrack.currentTrack.currentTime(); // Get current position
+            console.log("Saving seek position:", currentTime);
+
+            setTimeout(() => {
+                soundTrack.currentTrack.jump(currentTime); // Restore position after resize
+                console.log("Restoring seek position:", currentTime);
+            }, 100);
+        }
+    });
+
     // Attach event listeners globally
     window.mousePressed = this.mousePressed;
     window.mouseDragged = this.mouseDragged;

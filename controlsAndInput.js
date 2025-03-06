@@ -15,20 +15,6 @@ function ControlsAndInput(){
 	this.visualizationMenu;
 	// END MY CODE HERE
 
-	//make the window fullscreen or revert to windowed
-	//responds to keyboard presses
-	//@param keycode the ascii code of the keypressed
-	// this.keyPressed = function(keycode){
-	// 	if(keycode == 32){
-	// 		this.menuDisplayed = !this.menuDisplayed;
-	// 	}
-	//
-	// 	if(keycode > 48 && keycode < 58){
-	// 		var visNumber = keycode - 49;
-	// 		vis.selectVisual(vis.visuals[visNumber].name);
-	// 	}
-	// 	return keycode;
-	// };
 
 	// Separate function for visualization item click handling
 	this.handleVisualizationItemClick = function (item, index) {
@@ -43,7 +29,6 @@ function ControlsAndInput(){
 	this.cleanSoundFileName = function(filename){
 		return filename.replace(/^assets\//, "");
 	}
-
 
 	// MY CUSTOM CODE STARTS HERE //
 	this.updateElapsedTime = function (elapsedTime) {
@@ -88,7 +73,6 @@ function ControlsAndInput(){
 		document.querySelector('.track-info p').innerHTML = this.cleanSoundFileName(track);
 	}
 
-
 	this.playListData = {
 		title: 'My Playlist',
 		menuType:'playlist',
@@ -114,7 +98,6 @@ function ControlsAndInput(){
 		pop();
 		this.playListData.popUpData = audioFiles;
 	};
-
 
 
 	this.visualizationPopup = new PopUpConstructor(this.visualizationData, `visualization-list-popup`);
@@ -180,10 +163,10 @@ function ControlsAndInput(){
 		let prevButton = document.querySelector('.prev-button');
 		let nextButton = document.querySelector('.next-button');
 
-		let visualizationUIHook = document.querySelector(".playlist-ui-hook");
+		let visualizationUIHook = document.querySelector(".visualization-ui-hook");
 		visualizationUIHook.innerHTML += this.visualizationPopup.initialisePopUp();
 
-		let playListUIHook = document.querySelector(".visualization-ui-hook");
+		let playListUIHook = document.querySelector(".playlist-ui-hook");
 		playListUIHook.innerHTML += this.playListPopup.initialisePopUp();
 
 		// SET CLICK EVENTS HERE
@@ -198,9 +181,19 @@ function ControlsAndInput(){
 		nextButton.addEventListener("click", this.nextTrack);
 
 		playButton.addEventListener("click", () => {
-			this.togglePlayBtn(playIcon);
-			soundTrack.resumePlay();
-		})
+			if (currentTrack.isPlaying()) {
+				currentTrack.pause(); // Pause the track
+				playIcon.innerHTML = "play_arrow";
+			} else {
+				// Resume from last paused position
+				if (typeof currentTrack.resume === "function") {
+					currentTrack.resume();
+				} else {
+					currentTrack.play(); // Fallback if `resume()` doesn't exist
+				}
+				playIcon.innerHTML = "pause";
+			}
+		});
 
 		playListButton.addEventListener("click", () => {
 			// Toggle playlist popup and handle callback
@@ -219,7 +212,7 @@ function ControlsAndInput(){
 		});
 
 
-		visualizationButton.addEventListener('click', (event)=>{
+		visualizationButton.addEventListener('click', (event)=> {
 			//load popup
 			this.visualizationPopup.toggle((isOpen)=>{
 				if(isOpen){

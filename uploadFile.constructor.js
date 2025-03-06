@@ -1,7 +1,4 @@
 let UploadFileConstructor = function () {
-
-
-    // Handle file selection
     this.handleFileSelect = function (event) {
         const files = event.target.files;
         for (let i = 0; i < files.length; i++) {
@@ -9,39 +6,48 @@ let UploadFileConstructor = function () {
             const objectURL = URL.createObjectURL(file);
             audioFiles.push({ name: file.name, url: objectURL });
         }
-
         this.updateFileList();
-    }
+    };
 
-    this.updateFileList = function () {     // Update the displayed list of files
+    this.updateFileList = function () { // Update the displayed list of files
         controls.playListData.popUpData = audioFiles;
         soundTrack.initPlayList();
-    }
-
+    };
 
     this.uploadFile = function (callback) {
-        let uploadButton = document.querySelectorAll('.upload-audio-file')[0]; // Get first element
+        // Attach click event **once** for dynamically created elements
+        if (!document.uploadListenerAdded) {
+            document.uploadListenerAdded = true; // Prevent multiple bindings
 
-        if (uploadButton) {
-            uploadButton.addEventListener('click', () => {
-                document.getElementById('fileInput').click();
-            });
+            document.addEventListener('click', (event) => {
+                const uploadButton = event.target.closest('.upload-audio-file');
+                if (uploadButton) {
+                    console.log('Upload button clicked');
 
-            document.getElementById('fileInput').addEventListener('change',  (event)=> {
-                if (event.target.files.length > 0) {
-                    this.handleFileSelect(event);
-                    callback('success');
-                    setTimeout(() => {
-                        callback('uploaded');
-                    }, 100);
+                    // Ensure we find the correct #fileInput
+                    let fileInput = document.getElementById('fileInput');
+                    if (!fileInput) {
+                        console.error('Error: #fileInput not found!');
+                        return;
+                    }
+
+                    fileInput.click();
                 }
             });
-        } else {
-            callback('fail');
-            return false;
+
+            document.addEventListener('change', (event) => {
+                if (event.target.id === 'fileInput') {
+                    if (event.target.files.length > 0) {
+                        this.handleFileSelect(event);
+                        callback('success');
+                        setTimeout(() => {
+                            callback('uploaded');
+                        }, 100);
+                    }
+                }
+            });
         }
     };
 
     this.updateFileList();
-
 };

@@ -3,15 +3,24 @@ let SoundTrack = function() {
     this.currentTrackIndex = 0;
 
     this.initPlayList = function (){
-        //RESET THE ARRAY to remove the duplicates
-        playlist=[];
-        // Load all uploaded tracks into the playlist array
+        // Reset the playlist array to remove duplicates
+        playlist = [];
+
+        // Load all uploaded tracks into the playlist array asynchronously
         for (let i = 0; i < audioFiles.length; i++) {
-            playlist.push(audioFiles[i].url);
-            playlist[i] = loadSound(playlist[i]);
+            loadSound(audioFiles[i].url, (sound) => {
+                playlist[i] = sound; // Store loaded sound
+                if (i === 0) {
+                    soundIsReady = true; // Mark first track as ready
+                }
+            }, (error) => {
+                console.error(`Error loading track ${audioFiles[i].url}:`, error);
+            });
         }
+
         this.trackEventListeners();
-    }
+    };
+
 
     this.trackEventListeners = function () {
         //INITIALIZES THE EVENT LISTENER ON THE PLAYLIST MENU
@@ -24,10 +33,9 @@ let SoundTrack = function() {
     }
 
     this.playTrack = function(index) {
-        if (index != false){
+        if (index !== false) {
             this.currentTrackIndex = index;
         }
-
 
         // Handle looping: if at the last track, restart to 0; if at -1, go to the last track
         if (this.currentTrackIndex >= playlist.length) {
@@ -36,6 +44,19 @@ let SoundTrack = function() {
             this.currentTrackIndex = playlist.length - 1;
         }
 
+        let selectedTrack = playlist[this.currentTrackIndex];
+
+        // If the track isn't loaded yet, wait for it
+        if (!selectedTrack || !selectedTrack.isLoaded()) {
+            console.warn(`Track ${this.currentTrackIndex} not ready yet. Waiting...`);
+            let checkInterval = setInterval(() => {
+                if (selectedTrack && selectedTrack.isLoaded()) {
+                    clearInterval(checkInterval);
+                    this.playTrack(this.currentTrackIndex); // Retry once loaded
+                }
+            }, 100); // Check every 100ms
+            return;
+        }
 
         // Stop the currently playing track
         if (currentTrack && currentTrack.isPlaying()) {
@@ -44,7 +65,7 @@ let SoundTrack = function() {
         }
 
         // Play the selected track
-        currentTrack = playlist[this.currentTrackIndex];
+        currentTrack = selectedTrack;
         currentTrack.play();
 
         durationInSeconds = currentTrack.duration();
@@ -53,9 +74,10 @@ let SoundTrack = function() {
 
         controls.togglePlayBtn(document.querySelector(".play-button .material-symbols-outlined"));
         controls.updateTrackTitle(audioFiles[this.currentTrackIndex].name);
-    }
+    };
 
-    this.resumePlay = function () {
+
+    this.togglePlay = function () {
         if (currentTrack && currentTrack.isPlaying()) {
             currentTrack.stop();
             controls.togglePlayBtn(document.querySelector(".play-button .material-symbols-outlined"));
