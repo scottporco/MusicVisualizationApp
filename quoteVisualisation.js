@@ -45,22 +45,23 @@ let QuoteVisualization = function() {
             line(0, i, width, i);
         }
 
-        // Sound-responsive background pulse
+        // Background pulse
         let spectrum = fft.analyze();
         let bass = spectrum[2];
         let bgPulse = map(bass, 0, 255, 50, 200);
         background(bgPulse, 20, 60, 50, 50);
 
-        push(); // Isolate transformations
-        fill(255, fadeAlpha);
-        textAlign(CENTER, CENTER);
-        textSize(32);
-        rectMode(CENTER);
-        let textBoxWidth = width * 0.6;
-        let textBoxHeight = height * 0.3;
-        text(quote, width / 2 - textBoxWidth / 2, height / 2 - textBoxHeight / 2, textBoxWidth, textBoxHeight);
-        textSize(24);
-        text(`- ${author}`, width / 2, height / 2 + textBoxHeight / 2 + 30);
+        console.log(width,height);
+
+        push();
+            fill(255, fadeAlpha);
+            textAlign(CENTER, CENTER);
+            textSize(32);
+            let textBoxWidth = width * 0.6;
+            let textBoxHeight = height * 0.3;
+            text(quote, width / 2 - textBoxWidth / 2, height / 2 - textBoxHeight / 2, textBoxWidth, textBoxHeight);
+            textSize(24);
+            text(`- ${author}`, width / 2, height / 2 + textBoxHeight / 2 + 30);
         pop(); // Restore previous drawing state
 
         // Smooth fade-in effect
