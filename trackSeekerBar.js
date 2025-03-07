@@ -10,6 +10,7 @@ let TrackSeekerBar = function () {
     this.barHeight = 5;
     this.barY = windowHeight - (this.barHeight + 15); // Adjust to window height
 
+    this.knobRadius = 10;  // Increased knob size
     this.knobX;
 
     this.draw = function () {
@@ -26,7 +27,7 @@ let TrackSeekerBar = function () {
 
         // Draw seeker background
         fill(45, 42, 42);
-        rect(this.barX, this.barY - 5, this.barWidth, 30);
+        rect(this.barX, this.barY-5, this.barWidth, 30);
 
         // Draw progress line
         fill(100, 0, 0);
@@ -40,17 +41,18 @@ let TrackSeekerBar = function () {
         fill(255, 0, 0);
         rect(this.barX, this.barY-5, progress, this.barHeight, 5);
 
-        // Draw draggable knob
+        // Draw draggable knob (Now larger)
         this.knobX = this.barX + progress;
         fill(255, 0, 0);
-        ellipse(this.knobX, this.barY-5 + this.barHeight / 2, 15, 15);
+        ellipse(this.knobX, this.barY-5 + this.barHeight / 2, this.knobRadius * 2, this.knobRadius * 2);
 
         this.cursorStyle(HAND);
     };
 
     this.cursorStyle = function (style) {
         let d = dist(mouseX, mouseY, this.knobX, this.barY + this.barHeight / 2);
-        cursor(d < 7.5 ? style : ARROW);
+        let grabRange = this.knobRadius + 5;  // Increase the grab range for easier interaction
+        cursor(d < grabRange ? style : ARROW);
     };
 
     this.updateSeeker = function (x) {
@@ -61,7 +63,10 @@ let TrackSeekerBar = function () {
     };
 
     this.mousePressed = () => {
-        if (mouseY > this.barY && mouseY < this.barY + this.barHeight) {
+        let d = dist(mouseX, mouseY, this.knobX, this.barY + this.barHeight / 2);
+        let grabRange = this.knobRadius + 5; // Allow slight misclicks
+
+        if (d < grabRange) {
             this.cursorStyle(MOVE);
             this.updateSeeker(mouseX);
             this.dragging = true;

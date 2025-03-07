@@ -106,34 +106,33 @@ function ControlsAndInput(){
 
 	this.initialisePlayerBarUI = function () {
 		createDiv(`
-			<nav class="player-bar flex-start-center">
+			<nav class="player-bar flex-evenly-center">
 				
 				<div class="player-bar-control flex-center-center">
-					<button class="prev-button">
-					<span class="material-symbols-outlined white">
-						skip_previous
-					</span>
-					</button>
-					
-					<button class="play-button">
-						<span class="material-symbols-outlined white">
-							play_arrow
-						</span>
-					</button>
-					
-					<button class="next-button">
-						<span class="material-symbols-outlined white">
-							skip_next
-						</span>
-					</button>
+					<div class="flex-evenly-center">
+						<button class="prev-button">
+							<span class="material-symbols-outlined white">
+								skip_previous
+							</span>
+						</button>
 						
-					<div class="elapsed-time">
-						 
-					</div>
+						<button class="play-button">
+							<span class="material-symbols-outlined white">
+								play_arrow
+							</span>
+						</button>
+						
+						<button class="next-button">
+							<span class="material-symbols-outlined white">
+								skip_next
+							</span>
+						</button>
+					</div>						
+					<div class="elapsed-time"> </div>
 				</div>
 				
 				<div class="track-info">
-					<p>  </p>
+					<p class="single-line-text">  </p>
 				</div>
 				
 				<div class="player-bar-features flex-evenly-center">
