@@ -1,66 +1,63 @@
 let TrackSeekerBar = function () {
-    this.trackLength = 0; // Get total track duration in seconds
-    this.playing = false; // Track playing state
-    this.dragging = false; // Flag for dragging the seeker
-    this.currentTime = 0; // Init current time
+    this.trackLength = 0;
+    this.playing = false;
+    this.dragging = false;
+    this.currentTime = 0;
+
     // Seeker bar properties
     this.barX = 0;
-    this.barY = 0;
-    this.barWidth = width;
-    this.barHeight = 5; // Bar Height thickness
-    this.knobX;
-    this.draw = function () {
-        this.barWidth = width;
-        this.trackLength = currentTrack.duration();
-        this.barY = height - (this.barHeight + 15);
-        this.playing = currentTrack.isPlaying(); // Ensure `this.playing` is always in sync
+    this.barWidth = windowWidth; // Use dynamic window width
+    this.barHeight = 5;
+    this.barY = windowHeight - (this.barHeight + 15); // Adjust to window height
 
-        // Always get the latest playback time from the track
-        if (!this.dragging && this.playing) { // Only update when playing
+    this.knobX;
+
+    this.draw = function () {
+        // Always update bar width and Y position dynamically
+        this.barWidth = windowWidth;
+        this.barY = windowHeight - (this.barHeight + 15);
+
+        this.trackLength = currentTrack ? currentTrack.duration() : 0;
+        this.playing = currentTrack && currentTrack.isPlaying();
+
+        if (!this.dragging && this.playing) {
             this.currentTime = currentTrack.currentTime();
         }
 
-        // Draw the seeker bar background
+        // Draw seeker background
         fill(45, 42, 42);
-        rect(this.barX, height - (this.barHeight + 10), width, 30);
+        rect(this.barX, this.barY - 5, this.barWidth, 30);
 
-        // Draw the seeker bar line
-        fill(100, 0 , 0);
-        stroke(45, 42, 42);
+        // Draw progress line
+        fill(100, 0, 0);
         strokeWeight(0);
-        rect(this.barX, this.barY, width, this.barHeight);
+        rect(this.barX, this.barY-5, this.barWidth, this.barHeight);
 
-
-        // Calculate progress (fixing movement)
+        // Calculate progress
         let progress = map(this.currentTime, 0, this.trackLength, 0, this.barWidth);
 
-        // Draw the progress indicator
+        // Draw progress indicator
         fill(255, 0, 0);
-        rect(this.barX, this.barY, progress, this.barHeight, 5);
+        rect(this.barX, this.barY-5, progress, this.barHeight, 5);
 
-        // Draw the draggable knob (Red color)
-        this.knobX = (this.barX+8) + progress; // Fixing knob movement
-        fill(255, 0, 0); // Red knob
-        ellipse(this.knobX, this.barY + this.barHeight / 2, 15, 15);
+        // Draw draggable knob
+        this.knobX = this.barX + progress;
+        fill(255, 0, 0);
+        ellipse(this.knobX, this.barY-5 + this.barHeight / 2, 15, 15);
 
         this.cursorStyle(HAND);
-
     };
 
     this.cursorStyle = function (style) {
         let d = dist(mouseX, mouseY, this.knobX, this.barY + this.barHeight / 2);
-        if (d < 15/2) {
-            cursor(style); // Change cursor to pointer (hand)
-        } else {
-            cursor(ARROW); // Default cursor
-        }
-    }
+        cursor(d < 7.5 ? style : ARROW);
+    };
 
     this.updateSeeker = function (x) {
         let clampedX = constrain(x, this.barX, this.barX + this.barWidth);
         let newTime = map(clampedX, this.barX, this.barX + this.barWidth, 0, this.trackLength);
-        currentTrack.jump(newTime); // Seek track
-        this.currentTime = newTime; // Update displayed time
+        if (currentTrack) currentTrack.jump(newTime);
+        this.currentTime = newTime;
     };
 
     this.mousePressed = () => {
@@ -82,32 +79,31 @@ let TrackSeekerBar = function () {
     };
 
     this.keyPressed = () => {
-        if (key === ' ') {
+        if (key === ' ' && currentTrack) {
             if (currentTrack.isPlaying()) {
                 currentTrack.pause();
-                this.playing = false; // Sync playing state
+                this.playing = false;
             } else {
                 currentTrack.play();
-                this.playing = true; // Sync playing state
+                this.playing = true;
             }
         }
     };
 
-    window.addEventListener("resize", () => {
-        if (soundTrack.currentTrack && soundTrack.currentTrack.isPlaying()) {
-            let currentTime = soundTrack.currentTrack.currentTime(); // Get current position
-            console.log("Saving seek position:", currentTime);
+    // Ensure seek bar updates dynamically on window resize
+    this.onResize = () => {
+        this.barWidth = windowWidth; // Update seek bar width
+        this.barY = windowHeight - (this.barHeight + 15); // Adjust Y position
+        this.draw();
+    };
 
-            setTimeout(() => {
-                soundTrack.currentTrack.jump(currentTime); // Restore position after resize
-                console.log("Restoring seek position:", currentTime);
-            }, 100);
-        }
-    });
+    // Attach event listeners using p5
+    this.attachEvents = function () {
+        mousePressed = this.mousePressed;
+        mouseDragged = this.mouseDragged;
+        mouseReleased = this.mouseReleased;
+        keyPressed = this.keyPressed;
+    };
 
-    // Attach event listeners globally
-    window.mousePressed = this.mousePressed;
-    window.mouseDragged = this.mouseDragged;
-    window.mouseReleased = this.mouseReleased;
-    window.keyPressed = this.keyPressed;
+    this.attachEvents();
 };

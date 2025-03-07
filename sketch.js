@@ -126,23 +126,23 @@ function draw() {
 
 }
 
-
 function windowResized() {
 	// Update global window dimensions
 	windowWidth = window.innerWidth;
-	windowHeight = window.innerHeight - 80;
+	windowHeight = window.innerHeight - 80; // Adjust height properly
 
 	if (vis.selectedVisual.hasOwnProperty('onResize')) {
 		vis.selectedVisual.onResize();
 	}
 
-	// Resize canvas
+	// Resize canvas to fit new dimensions
 	resizeCanvas(windowWidth, windowHeight);
 
-	// Update seek bar dimensions
+	// Ensure trackSeekerBar updates correctly
 	if (trackSeekerBar) {
 		console.log("Reinitializing seek bar after resize");
-		trackSeekerBar.barWidth = windowWidth; // Adjust width after resizing
+		trackSeekerBar.barWidth = windowWidth; // Update width
+		trackSeekerBar.barY = windowHeight - (trackSeekerBar.barHeight + 15); // Update Y position
 		trackSeekerBar.draw(); // Force redraw
 	}
 }
