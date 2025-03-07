@@ -6,8 +6,8 @@ let TrackSeekerBar = function () {
     // Seeker bar properties
     this.barX = 0;
     this.barY = 0;
-    this.barWidth = 0;
-    this.barHeight = 5; // Slimmer bar for better visuals
+    this.barWidth = width;
+    this.barHeight = 5; // Bar Height thickness
     this.knobX;
     this.draw = function () {
         this.barWidth = width;
