@@ -26,6 +26,8 @@ let playlist = [],
 	elapsedSeconds,
 	soundTrack,
 	soundIsReady = false,
+	windowWidth,
+	windowHeight,
 	trackSeekerBar;
 // END MY CODE HERE
 
@@ -39,6 +41,8 @@ let soundLoaded = function() {
 }
 
 function setup() {
+	windowWidth = window.innerWidth;
+	windowHeight = (window.innerHeight - 80);
 	//create a new visualisation container and add visualisations
 	vis = new Visualisations();
 	vis.add(new Spectrum());
@@ -58,7 +62,7 @@ function setup() {
 	// MY CODE STARTS HERE //
 
 	// Create a full-window canvas & assign the canvas to the div with id "musicVisCanvas"
-	let canvas = createCanvas(windowWidth, windowHeight - 80);
+	let canvas = createCanvas(windowWidth, windowHeight);
 	canvas.parent("musicVisCanvas");
 
 	controls.initialisePlayerBarUI(); //LOADING NEW PLAYER BAR UI HERE Since it is HTML
@@ -123,23 +127,22 @@ function draw() {
 }
 
 
-//when the window has been resized. Resize canvas to fit
-//if the visualisation needs to be resized call its onResize method
 function windowResized() {
+	// Update global window dimensions
+	windowWidth = window.innerWidth;
+	windowHeight = window.innerHeight - 80;
+
+	if (vis.selectedVisual.hasOwnProperty('onResize')) {
+		vis.selectedVisual.onResize();
+	}
+
+	// Resize canvas
 	resizeCanvas(windowWidth, windowHeight);
 
-	if (vis.selectedVisual.hasOwnProperty('onResize')) {
-		vis.selectedVisual.onResize();
-	}
-
-	// Ensure seek bar is redrawn after resize
+	// Update seek bar dimensions
 	if (trackSeekerBar) {
 		console.log("Reinitializing seek bar after resize");
-		trackSeekerBar.draw(); // Force redraw after resize
-	}
-
-	if (vis.selectedVisual.hasOwnProperty('onResize')) {
-		vis.selectedVisual.onResize();
+		trackSeekerBar.barWidth = windowWidth; // Adjust width after resizing
+		trackSeekerBar.draw(); // Force redraw
 	}
 }
-
