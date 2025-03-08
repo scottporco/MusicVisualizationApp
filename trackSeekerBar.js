@@ -14,6 +14,10 @@ let TrackSeekerBar = function () {
     this.knobX;
 
     this.draw = function () {
+
+        if (this.hidden) return; // Don't draw if hidden
+
+
         // Always update bar width and Y position dynamically
         this.barWidth = windowWidth;
         this.barY = windowHeight - (this.barHeight + 15);
@@ -62,6 +66,13 @@ let TrackSeekerBar = function () {
         this.currentTime = newTime;
     };
 
+    this.toggleVisibility = function(isFullscreen) {
+        if (isFullscreen) {
+            this.hidden = true;  // Hide seek bar in fullscreen
+        } else {
+            this.hidden = false; // Show seek bar when exiting fullscreen
+        }
+    };
 
     // Ensure seek bar updates dynamically on window resize
     this.onResize = () => {

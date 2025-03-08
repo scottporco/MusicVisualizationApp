@@ -54,4 +54,10 @@ let MuteButton = function() {
         }
     };
 
+
+    this.onResize = function() {
+        this.x = windowWidth - this.size - 20; // Keep it in the top-right corner
+        this.y = 20; // Adjust position slightly if needed
+    };
+
 };

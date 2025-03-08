@@ -134,8 +134,10 @@ function keyPressed() {
 	if (key === ' ') {
 		if (currentTrack && currentTrack.isPlaying()) {
 			currentTrack.pause();
+			controls.togglePlayBtn(document.querySelector(".play-button .material-symbols-outlined"));
 		} else if (currentTrack) {
 			currentTrack.play();
+			controls.togglePlayBtn(document.querySelector(".play-button .material-symbols-outlined"));
 		}
 	}
 }
@@ -152,6 +154,10 @@ function mousePressed() {
 	}
 
 	muteButton.handleClick();
+
+	setTimeout(() => {
+		windowResized(); // Force a resize after fullscreen change
+	}, 100);
 }
 
 function mouseDragged(){
@@ -170,19 +176,27 @@ function windowResized() {
 	windowWidth = window.innerWidth;
 	windowHeight = window.innerHeight - 80; // Adjust height properly
 
-	if (vis.selectedVisual.hasOwnProperty('onResize')) {
-		vis.selectedVisual.onResize();
+	if (fullscreen()) {
+		resizeCanvas(windowWidth, windowHeight + 80); // Use full screen height
+	} else {
+		resizeCanvas(windowWidth, window.innerHeight); // Normal mode height
 	}
-
-	// Resize canvas to fit new dimensions
-	resizeCanvas(windowWidth, windowHeight);
 
 	// Ensure trackSeekerBar updates correctly
 	if (trackSeekerBar) {
-		console.log("Reinitializing seek bar after resize");
-		trackSeekerBar.barWidth = windowWidth; // Update width
-		trackSeekerBar.barY = windowHeight - (trackSeekerBar.barHeight + 15); // Update Y position
+		if(fullscreen()){
+			trackSeekerBar.toggleVisibility(true);
+		} else {
+			trackSeekerBar.toggleVisibility(false);
+			trackSeekerBar.barWidth = windowWidth; // Update width
+			trackSeekerBar.barY = windowHeight - (trackSeekerBar.barHeight + 15); // Update Y position
+		}
 		trackSeekerBar.draw(); // Force redraw
+	}
+
+
+	if (vis.selectedVisual.hasOwnProperty('onResize')) {
+		vis.selectedVisual.onResize();
 	}
 
 	if (muteButton) {
