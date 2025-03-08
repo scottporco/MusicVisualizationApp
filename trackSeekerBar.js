@@ -62,38 +62,6 @@ let TrackSeekerBar = function () {
         this.currentTime = newTime;
     };
 
-    this.mousePressed = () => {
-        let d = dist(mouseX, mouseY, this.knobX, this.barY + this.barHeight / 2);
-        let grabRange = this.knobRadius + 5; // Allow slight misclicks
-
-        if (d < grabRange) {
-            this.cursorStyle(MOVE);
-            this.updateSeeker(mouseX);
-            this.dragging = true;
-        }
-    };
-
-    this.mouseDragged = () => {
-        if (this.dragging) {
-            this.updateSeeker(mouseX);
-        }
-    };
-
-    this.mouseReleased = () => {
-        this.dragging = false;
-    };
-
-    this.keyPressed = () => {
-        if (key === ' ' && currentTrack) {
-            if (currentTrack.isPlaying()) {
-                currentTrack.pause();
-                this.playing = false;
-            } else {
-                currentTrack.play();
-                this.playing = true;
-            }
-        }
-    };
 
     // Ensure seek bar updates dynamically on window resize
     this.onResize = () => {
@@ -102,13 +70,4 @@ let TrackSeekerBar = function () {
         this.draw();
     };
 
-    // Attach event listeners using p5
-    this.attachEvents = function () {
-        mousePressed = this.mousePressed;
-        mouseDragged = this.mouseDragged;
-        mouseReleased = this.mouseReleased;
-        keyPressed = this.keyPressed;
-    };
-
-    this.attachEvents();
 };

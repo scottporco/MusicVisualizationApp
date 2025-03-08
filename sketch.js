@@ -28,7 +28,8 @@ let playlist = [],
 	soundIsReady = false,
 	windowWidth,
 	windowHeight,
-	trackSeekerBar;
+	trackSeekerBar,
+	muteButton;
 // END MY CODE HERE
 
 function preload() {
@@ -95,7 +96,9 @@ function setup() {
 				}
 			}, 100); // Check every 100ms
 		}
-	}, 1000)
+	}, 1000);
+
+	muteButton = new MuteButton();
 
 }
 
@@ -117,14 +120,50 @@ function draw() {
 			elapsedSeconds = Math.floor(elapsedTime % 60);
 			let formattedSeconds = String(elapsedSeconds).padStart(2, '0');
 			controls.updateElapsedTime(`${elapsedMinutes}:${formattedSeconds} / ${durationMinutes}:${durationSeconds}`);
+			muteButton.draw();
 		}
+		trackSeekerBar.draw();
 	}
-
-	trackSeekerBar.draw();
 
 	// END MY CODE HERE
 
 }
+
+
+function keyPressed() {
+	if (key === ' ') {
+		if (currentTrack && currentTrack.isPlaying()) {
+			currentTrack.pause();
+		} else if (currentTrack) {
+			currentTrack.play();
+		}
+	}
+}
+
+
+function mousePressed() {
+	let d = dist(mouseX, mouseY, trackSeekerBar.knobX, trackSeekerBar.barY + trackSeekerBar.barHeight / 2);
+	let grabRange = trackSeekerBar.knobRadius + 5; // Allow slight misclicks
+
+	if (d < grabRange) {
+		trackSeekerBar.cursorStyle(MOVE);
+		trackSeekerBar.updateSeeker(mouseX);
+		trackSeekerBar.dragging = true;
+	}
+
+	muteButton.handleClick();
+}
+
+function mouseDragged(){
+	if (trackSeekerBar.dragging) {
+		trackSeekerBar.updateSeeker(mouseX);
+	}
+}
+
+function mouseReleased() {
+	trackSeekerBar.dragging = false;
+}
+
 
 function windowResized() {
 	// Update global window dimensions
@@ -145,4 +184,9 @@ function windowResized() {
 		trackSeekerBar.barY = windowHeight - (trackSeekerBar.barHeight + 15); // Update Y position
 		trackSeekerBar.draw(); // Force redraw
 	}
+
+	if (muteButton) {
+		muteButton.onResize();
+	}
+
 }
