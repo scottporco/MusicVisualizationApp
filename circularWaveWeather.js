@@ -9,6 +9,7 @@ let CircularWaveWeather = function() {
     let weatherLoaded = false;
     let cityTimeOffset = 0; // Time zone offset in hours
 
+    // Load a list of cities for the dropdown menu
     let cities = [
         { name: "Current Location", lat: null, lon: null },
         { name: "Los Angeles, USA", lat: 34.0522, lon: -118.2437 },
@@ -68,7 +69,7 @@ let CircularWaveWeather = function() {
     };
 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function
-    // ASYNC functions interesting concept I learned about when reaserching how to consume an API with JS
+    // ASYNC functions interesting concept I learned about when researching how to consume an API with JS
     async function fetchTimeZone() {
         let url = `https://api.timezonedb.com/v2.1/get-time-zone?key=G7AGHLTK9RXG&format=json&by=position&lat=${lat}&lng=${lon}`;
         try {
