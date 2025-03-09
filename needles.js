@@ -13,13 +13,17 @@ function Needles() {
 	//frquencies used by the energyfunction to retrieve a value
 	//for each plot.
 	this.frequencyBins = ["bass", "lowMid", "highMid", "treble"];
-
+	width = windowWidth;
+	height = windowHeight;
 	//resize the plots sizes when the screen is resized.
 	this.onResize = function() {
+		width = windowWidth; // Update global width
+		height = windowHeight; // Update global height
+
 		this.pad = width / 20;
 		this.plotWidth = (width - this.pad) / this.plotsAcross;
 		this.plotHeight = (height - this.pad) / this.plotsDown;
-		this.dialRadius = (this.plotWidth - this.pad) / 2 - 5;
+		this.dialRadius = min(this.plotWidth, this.plotHeight) * 0.4; // 40% of the smallest dimension
 	};
 	//call onResize to set initial values when the object is created
 	this.onResize();
@@ -67,15 +71,18 @@ function Needles() {
 	this.needle = function(energy, centreX, bottomY) {
 		push();
 		stroke('#333333');
-		//translate so 0 is at the bottom of the needle
+		strokeWeight(2); // Make the needle more visible
 		translate(centreX, bottomY);
-		//map the energy to the angle for the plot
-		theta = map(energy, 0, 255, minAngle, maxAngle);
-		//calculate x and y coorindates from angle for the length of needle
-		var x = this.dialRadius * cos(theta);
-		var y = this.dialRadius * sin(theta);
-		//draw the needle
+
+		let theta = map(energy, 0, 255, minAngle, maxAngle); // Map energy to angle
+
+		// Calculate needle coordinates
+		let x = this.dialRadius * cos(theta);
+		let y = this.dialRadius * sin(theta);
+
+		// Draw the needle
 		line(0, 0, x, y);
+
 		pop();
 	};
 
@@ -112,5 +119,6 @@ function Needles() {
 		}
 		pop();
 	};
+
 
 }
