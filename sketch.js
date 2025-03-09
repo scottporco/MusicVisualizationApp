@@ -9,10 +9,23 @@ var fourier;
 // VARIABLE FOR VIS LIST
 let visList;
 // MY CODE HERE
-let audioFiles = [{
-	name:'stomper_reggae_bit.mp3',
-	url: 'assets/stomper_reggae_bit.mp3',
-}]
+/*
+* Music Sources
+* https://artlist.io/royalty-free-music/song/kiwi-juice/134675
+* https://artlist.io/royalty-free-music/song/the-racer/17184
+* https://artlist.io/royalty-free-music/song/sugarsweet/70662
+* https://artlist.io/royalty-free-music/song/are-you-ready-for-me-baby/63852
+* */
+let audioFiles = [
+	{
+		name:'Kiwi Juice',
+		url: 'assets/Kiwi-Juice.mp3',
+	},
+	{
+		name:'The Racer',
+		url: 'assets/The-Racer.mp3',
+	},
+]
 
 let playlist = [],
 	currentTrack = null,
@@ -45,11 +58,11 @@ function setup() {
 	windowHeight = (window.innerHeight - 80);
 	//create a new visualisation container and add visualisations
 	vis = new Visualisations();
+	vis.add(new CircularWaveWeather());
+	vis.add(new QuoteVisualization());
 	vis.add(new Spectrum());
 	vis.add(new WavePattern());
 	vis.add(new Needles());
-	vis.add(new CircularWaveWeather());
-	vis.add(new QuoteVisualization());
 
 	controls = new ControlsAndInput();
 	soundTrack = new SoundTrack();
@@ -79,7 +92,7 @@ function setup() {
 		if (soundIsReady) {
 			// currentTrack.play();
 			if (currentTrack) {
-				soundTrack.playTrack(soundTrack.currentTrackIndex + 1); // If already loaded from Preload, play immediately
+				soundTrack.playTrack(soundTrack.currentTrackIndex + 0); // If already loaded from Preload, play immediately
 				soundTrack.togglePlay();
 			}
 		} else {
@@ -88,14 +101,14 @@ function setup() {
 				if (soundIsReady) {
 					// currentTrack.play();
 					if (currentTrack) {
-						soundTrack.playTrack(soundTrack.currentTrackIndex + 1); // If already loaded from Preload, play immediately
+						soundTrack.playTrack(soundTrack.currentTrackIndex + 0); // If already loaded from Preload, play immediately
 						soundTrack.togglePlay();
 					}
 					clearInterval(checkInterval);
 				}
 			}, 100); // Check every 100ms
 		}
-	}, 1000);
+	}, 1500);
 
 	muteButton = new MuteButton();
 
@@ -103,25 +116,30 @@ function setup() {
 
 function draw() {
 
+	// MY CODE HERE
+
 	background(0);
 
 	//draw the selected visualisation
-	vis.selectedVisual.draw();
-	controls.draw();
-	audioFiles;
-	// MY CODE HERE	
+	if(soundIsReady){
 
-	if (currentTrack) {
-		if (currentTrack.isPlaying()) {
-			//GET ELAPSED TIME FROM AUDIO CLIP
-			elapsedTime = currentTrack.currentTime();
-			elapsedMinutes = Math.floor(elapsedTime / 60);
-			elapsedSeconds = Math.floor(elapsedTime % 60);
-			let formattedSeconds = String(elapsedSeconds).padStart(2, '0');
-			controls.updateElapsedTime(`${elapsedMinutes}:${formattedSeconds} / ${durationMinutes}:${durationSeconds}`);
-			muteButton.draw();
+		vis.selectedVisual.draw();
+		controls.draw();
+		audioFiles;
+
+		if (currentTrack) {
+			if (currentTrack.isPlaying()) {
+				//GET ELAPSED TIME FROM AUDIO CLIP
+				elapsedTime = currentTrack.currentTime();
+				elapsedMinutes = Math.floor(elapsedTime / 60);
+				elapsedSeconds = Math.floor(elapsedTime % 60);
+				let formattedSeconds = String(elapsedSeconds).padStart(2, '0');
+				controls.updateElapsedTime(`${elapsedMinutes}:${formattedSeconds} / ${durationMinutes}:${durationSeconds}`);
+				muteButton.draw();
+			}
+			trackSeekerBar.draw();
 		}
-		trackSeekerBar.draw();
+
 	}
 
 	// END MY CODE HERE

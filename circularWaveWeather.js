@@ -28,24 +28,28 @@ let CircularWaveWeather = function() {
         if (!dropdown) {
             dropdown = createSelect();
             dropdown.position(20, 20);
-            dropdown.hide(); // Ensure it's hidden on initial load
+            dropdown.hide(); // Ensure it's hidden initially
 
             cities.forEach((city, index) => {
                 dropdown.option(city.name, index);
             });
 
+            dropdown.selected(0); // Ensure "Current Location" is selected by default
+
             dropdown.changed(() => {
                 let selectedIndex = dropdown.value();
                 let selectedCity = cities[selectedIndex];
 
-                if (selectedCity.lat !== null && selectedCity.lon !== null) {
+                if (selectedCity.name === "Current Location") {
+                    this.getWeather().then(() => {
+                        dropdown.selected(0); // Re-select "Current Location" after updating
+                    });
+                } else {
                     lat = selectedCity.lat;
                     lon = selectedCity.lon;
                     cityName = selectedCity.name;
                     fetchWeather();
                     fetchTimeZone();
-                } else {
-                    this.getWeather();
                 }
             });
         }
@@ -112,7 +116,7 @@ let CircularWaveWeather = function() {
     };
 
     async function fetchCityName() {
-        let url = `https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}`;
+        let url = `https://geocode.maps.co/reverse?lat=${lat}&lon=${lon}&api_key=67cd56582efba854918419uxb6c4f85`;
         try {
             let response = await fetch(url);
             if (response.ok) {

@@ -41,7 +41,7 @@ function PopUpConstructor(data, className) {
                                 </span>
                             </button>
 				        </header>
-                       <section>
+                       <section class="force-scroll">
                             <ol>
                                 ${this.generateSectionBody(data.popUpData)}
                             </ol>
