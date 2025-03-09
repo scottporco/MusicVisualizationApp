@@ -22,8 +22,6 @@ let UploadFileConstructor = function () {
             document.addEventListener('click', (event) => {
                 const uploadButton = event.target.closest('.upload-audio-file');
                 if (uploadButton) {
-                    console.log('Upload button clicked');
-
                     // Ensure we find the correct #fileInput
                     let fileInput = document.getElementById('fileInput');
                     if (!fileInput) {

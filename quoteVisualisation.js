@@ -51,8 +51,6 @@ let QuoteVisualization = function() {
         let bgPulse = map(bass, 0, 255, 50, 200);
         background(bgPulse, 20, 60, 50, 50);
 
-        console.log(width,height);
-
         push();
             fill(255, fadeAlpha);
             textAlign(CENTER, CENTER);

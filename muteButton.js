@@ -28,9 +28,6 @@ let MuteButton = function() {
     };
 
     this.handleClick = function() {
-
-        console.log(mouseX, mouseY);
-
         if (
             mouseX > this.x && mouseX < this.x + this.size &&
             mouseY > this.y && mouseY < this.y + this.size
@@ -41,9 +38,6 @@ let MuteButton = function() {
 
 
     this.toggle = function() {
-
-        console.log('Hello');
-
         this.muted = !this.muted;
         if (currentTrack) {
             if (this.muted) {

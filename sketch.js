@@ -37,7 +37,6 @@ function preload() {
 }
 
 let soundLoaded = function() {
-	console.log('Sound file loaded!', currentTrack);
 	soundIsReady = true; // This is a flag to check if it's ready.
 }
 
