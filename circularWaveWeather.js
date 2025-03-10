@@ -1,5 +1,5 @@
 let CircularWaveWeather = function() {
-    this.name = "CircularWaveWeather";
+    this.name = "Weather Visualizer";
 
     let fourier = new p5.FFT();
     let weatherData = null;

@@ -1,5 +1,5 @@
 let QuoteVisualization = function() {
-    this.name = "QuoteVisualization";
+    this.name = "Quote Visualizer";
 
     let quote = "Loading quote...";
     let author = "";
